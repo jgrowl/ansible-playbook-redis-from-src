@@ -2,4 +2,7 @@ global_user: root
 global_use_sudo: False
 global_update_apt_cache: True
 
+redis_from_src_repository: https://github.com/antirez/redis.git
+redis_from_src_src_dir: /usr/local/src/redis
+redis_from_src_port: 6379
 redis_from_src_version: 2.6

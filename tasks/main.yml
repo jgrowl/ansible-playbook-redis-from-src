@@ -6,31 +6,28 @@
     - build-essential 
 
 - name: redis-from-src | Clone redis source
-  git: repo=https://github.com/antirez/redis.git dest=/usr/local/src/redis version=$redis_from_src_version
+  git: repo=$redis_from_src_repository dest=$redis_from_src_src_dir version=$redis_from_src_version
 
 - name: redis-from-src | Make redis 
-  command: make chdir=/usr/local/src/redis
+  command: make chdir=$redis_from_src_src_dir
 
 - name: redis-from-src | Make install
-  command: make install chdir=/usr/local/src/redis
-
-- name: redis-from-src | Make /etc/redis directory 
-  file: state=directory path=/etc/redis owner=root group=root
+  command: make install chdir=$redis_from_src_src_dir
 
 - name: redis-from-src | Make /var/redis directory 
   file: state=directory path=/etc/redis owner=root group=root
 
-- name: redis-from-src | Make /var/redis/6379 dir
-  file: state=directory path=/var/redis/6379 owner=root group=root
+- name: redis-from-src | Make /var/redis/$redis_from_src_port dir
+  file: state=directory path=/var/redis/$redis_from_src_port owner=root group=root
 
 - name: redis-from-src | Copy over redis init script 
-  template: src=templates/etc/init.d/redis_6379.j2 dest=/etc/init.d/redis_6379 owner=root group=root mode=0755
+  template: src=templates/etc/init.d/redis_PORT.j2 dest=/etc/init.d/redis_$redis_from_src_port owner=root group=root mode=0755
 
 - name: redis-from-src | Copy over redis config
-  template: src=templates/etc/redis/6379.conf.j2 dest=/etc/redis/6379.conf owner=root group=root
+  template: src=templates/etc/redis/PORT.conf.j2 dest=/etc/redis/$redis_from_src_port.conf owner=root group=root
 
 - name: redis-from-src | Start redis on boot 
-  command: update-rc.d redis_6379 defaults 21
+  command: update-rc.d redis_$redis_from_src_port defaults 21
 
 - name: redis-from-src | Restart redis 
-  service: name=redis_6379 state=started
+  service: name=redis_$redis_from_src_port state=started
