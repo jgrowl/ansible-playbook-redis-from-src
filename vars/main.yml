@@ -1,2 +1,5 @@
-#gitlabUrl: http://gitlab.spectr.us/ # Make sure this has a trailing slash
+global_user: root 
+global_use_sudo: False
+global_update_apt_cache: True
 
+redis_from_src_version: 2.6
